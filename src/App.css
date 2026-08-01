@@ -207,6 +207,10 @@ h1 {
   font-weight: 800;
 }
 
+.topbar-action {
+  flex: 0 0 auto;
+}
+
 .game-board {
   display: grid;
   grid-template-columns: minmax(280px, 420px) 1fr;
@@ -314,6 +318,15 @@ h1 {
 
 .feedback strong {
   color: var(--text-h);
+}
+
+.feedback-actions {
+  display: flex;
+  margin-top: 8px;
+}
+
+.feedback-actions .primary-action {
+  width: 100%;
 }
 
 .game-over-panel {
@@ -611,6 +624,10 @@ h1 {
 
   .scoreboard {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .topbar-action {
+    width: 100%;
   }
 
   .main-menu,

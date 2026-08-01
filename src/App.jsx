@@ -274,6 +274,11 @@ function App() {
             <dd>{getAccuracy(score)}%</dd>
           </div>
         </dl>
+        {!isKnockout && (
+          <button type="button" className="secondary-action topbar-action" onClick={returnToMenu}>
+            Zum Menü
+          </button>
+        )}
       </header>
 
       <section className="game-board" aria-live="polite">
@@ -312,6 +317,13 @@ function App() {
                 {round.entry.name} gehört zu {correctParty?.label ?? round.entry.partyRaw}
                 {correctParty?.fullName ? ` (${correctParty.fullName})` : ''}.
               </span>
+              {!isKnockout && (
+                <div className="feedback-actions">
+                  <button type="button" className="primary-action" onClick={nextRound}>
+                    Nächste Runde
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
@@ -394,7 +406,7 @@ function App() {
             Quelle
           </a>
         </p>
-        {!knockoutEnded && (
+        {isKnockout && !knockoutEnded && (
           <div className="actions">
             <button type="button" className="secondary-action" onClick={returnToMenu}>
               Zum Menü
@@ -402,11 +414,6 @@ function App() {
             <button type="button" className="secondary-action" onClick={restartGame}>
               Neu starten
             </button>
-            {!isKnockout && (
-              <button type="button" className="primary-action" onClick={nextRound}>
-                Nächste Runde
-              </button>
-            )}
           </div>
         )}
       </footer>
