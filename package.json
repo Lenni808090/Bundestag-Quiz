@@ -6,7 +6,7 @@
   "scripts": {
     "data:build": "node scripts/build-politician-data.mjs",
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prepare-sites-build.mjs",
     "lint": "eslint .",
     "test": "node --test",
     "preview": "vite preview"
