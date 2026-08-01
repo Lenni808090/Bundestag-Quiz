@@ -187,32 +187,6 @@ h1 {
   margin: 0;
 }
 
-.mode-switch {
-  display: inline-flex;
-  padding: 3px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--panel);
-}
-
-.mode-switch button {
-  min-height: 34px;
-  padding: 0 12px;
-  border: 0;
-  border-radius: 2px;
-  color: var(--muted);
-  background: transparent;
-  font: inherit;
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.mode-switch button.is-active {
-  color: var(--button-text);
-  background: var(--text-h);
-}
-
 .scoreboard div {
   min-width: 84px;
   padding: 10px 12px;
@@ -258,32 +232,14 @@ h1 {
   border-radius: 4px;
   background: var(--panel);
   box-shadow: var(--shadow);
-  touch-action: none;
-  cursor: grab;
-  outline: none;
 }
 
-.portrait-card:focus-visible,
 .party-target:focus-visible,
-.mode-switch button:focus-visible,
 .score-form-row input:focus-visible,
 .primary-action:focus-visible,
 .secondary-action:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
-}
-
-.portrait-card.is-selected {
-  border-color: var(--focus);
-  box-shadow: 0 0 0 4px var(--focus-soft), var(--shadow);
-}
-
-.portrait-card.is-dragging {
-  cursor: grabbing;
-}
-
-.portrait-card.is-dragging img {
-  opacity: 0.42;
 }
 
 .portrait-card img {
@@ -534,7 +490,6 @@ h1 {
   cursor: default;
 }
 
-.party-target.is-over,
 .party-target:hover:not(:disabled) {
   border-color: var(--party-color);
   background: color-mix(in srgb, var(--seat-bg) 84%, var(--party-color));
@@ -632,24 +587,6 @@ h1 {
   background: var(--panel);
 }
 
-.drag-preview {
-  position: fixed;
-  z-index: 20;
-  width: clamp(170px, 22vw, 260px);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  filter: drop-shadow(0 18px 28px rgba(15, 23, 42, 0.28));
-}
-
-.drag-preview img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
-  border: 3px solid #fff;
-  border-radius: 4px;
-}
-
 @keyframes image-pulse {
   from {
     background-position: 120% 0, 0 0;
@@ -683,14 +620,6 @@ h1 {
 
   .mode-card {
     min-height: 0;
-  }
-
-  .mode-switch {
-    width: 100%;
-  }
-
-  .mode-switch button {
-    flex: 1;
   }
 
   .game-board {

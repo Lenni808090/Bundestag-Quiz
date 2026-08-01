@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import politiciansData from './data/politicians.json'
 import {
   buildPartyTargets,
@@ -62,11 +62,7 @@ function App() {
   const [usedIds, setUsedIds] = useState([])
   const [round, setRound] = useState(() => createRound())
   const [result, setResult] = useState(null)
-  const [selected, setSelected] = useState(false)
-  const [drag, setDrag] = useState(null)
   const [loadedImageUrl, setLoadedImageUrl] = useState(null)
-  const targetRefs = useRef(new Map())
-  const portraitRef = useRef(null)
 
   const correctParty = useMemo(
     () => politiciansData.parties.find((party) => party.id === round.entry.partyId),
@@ -115,8 +111,6 @@ function App() {
     setUsedIds([])
     setRound(nextRoundState)
     setResult(null)
-    setSelected(false)
-    setDrag(null)
     setLoadedImageUrl(null)
     setPlayerName('')
     setScoreSaved(false)
@@ -128,10 +122,7 @@ function App() {
     setUsedIds(nextUsedIds)
     setRound(createRound(nextUsedIds))
     setResult(null)
-    setSelected(false)
-    setDrag(null)
     setLoadedImageUrl(null)
-    portraitRef.current?.focus()
   }, [round.entry.id, usedIds])
 
   useEffect(() => {
@@ -148,8 +139,6 @@ function App() {
     setScreen('menu')
     setMode(null)
     setResult(null)
-    setSelected(false)
-    setDrag(null)
     setPlayerName('')
     setScoreSaved(false)
     setIsSavingScore(false)
@@ -157,29 +146,6 @@ function App() {
 
   function restartGame() {
     startGame(mode ?? 'endless')
-  }
-
-  function registerTarget(id, node) {
-    if (node) {
-      targetRefs.current.set(id, node)
-    } else {
-      targetRefs.current.delete(id)
-    }
-  }
-
-  function findTargetAt(clientX, clientY) {
-    for (const [partyId, node] of targetRefs.current) {
-      const rect = node.getBoundingClientRect()
-      if (
-        clientX >= rect.left &&
-        clientX <= rect.right &&
-        clientY >= rect.top &&
-        clientY <= rect.bottom
-      ) {
-        return partyId
-      }
-    }
-    return null
   }
 
   function submitAnswer(partyId) {
@@ -190,7 +156,6 @@ function App() {
       partyId,
       correct,
     })
-    setSelected(false)
   }
 
   async function handleSaveScore(event) {
@@ -215,42 +180,6 @@ function App() {
     } finally {
       setScoreSaved(true)
       setIsSavingScore(false)
-    }
-  }
-
-  function handlePointerDown(event) {
-    if (answered) return
-    event.currentTarget.setPointerCapture(event.pointerId)
-    setSelected(true)
-    setDrag({
-      pointerId: event.pointerId,
-      x: event.clientX,
-      y: event.clientY,
-      overId: null,
-    })
-  }
-
-  function handlePointerMove(event) {
-    if (!drag || drag.pointerId !== event.pointerId || answered) return
-    setDrag((currentDrag) => ({
-      ...currentDrag,
-      x: event.clientX,
-      y: event.clientY,
-      overId: findTargetAt(event.clientX, event.clientY),
-    }))
-  }
-
-  function handlePointerUp(event) {
-    if (!drag || drag.pointerId !== event.pointerId) return
-    submitAnswer(findTargetAt(event.clientX, event.clientY))
-    setDrag(null)
-  }
-
-  function handlePortraitKeyDown(event) {
-    if (answered) return
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      setSelected((value) => !value)
     }
   }
 
@@ -349,22 +278,7 @@ function App() {
 
       <section className="game-board" aria-live="polite">
         <div className="portrait-area">
-          <div
-            ref={portraitRef}
-            className={`portrait-card ${selected ? 'is-selected' : ''} ${
-              drag ? 'is-dragging' : ''
-            } ${imageLoading ? 'is-loading' : ''}`}
-            role="button"
-            tabIndex={0}
-            aria-pressed={selected}
-            aria-label={`${round.entry.name} auswählen`}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={() => setDrag(null)}
-            onLostPointerCapture={() => setDrag(null)}
-            onKeyDown={handlePortraitKeyDown}
-          >
+          <div className={`portrait-card ${imageLoading ? 'is-loading' : ''}`}>
             <img
               key={round.entry.id}
               src={round.entry.imageUrl}
@@ -446,15 +360,13 @@ function App() {
           </div>
           <div className="party-hemicycle">
             {chamberTargets.map((party, index) => {
-              const isDropTarget = drag?.overId === party.id
               const wasChosen = result?.partyId === party.id
               const isCorrect = result && party.id === round.entry.partyId
               return (
                 <button
                   key={party.id}
-                  ref={(node) => registerTarget(party.id, node)}
                   type="button"
-                  className={`party-target party-seat-${index} ${isDropTarget ? 'is-over' : ''} ${
+                  className={`party-target party-seat-${index} ${
                     wasChosen ? 'was-chosen' : ''
                   } ${isCorrect ? 'is-answer' : ''}`}
                   style={{ '--party-color': party.color }}
@@ -482,33 +394,22 @@ function App() {
             Quelle
           </a>
         </p>
-        <div className="actions">
-          <button type="button" className="secondary-action" onClick={returnToMenu}>
-            Zum Menü
-          </button>
-          <button type="button" className="secondary-action" onClick={restartGame}>
-            Neu starten
-          </button>
-          {!isKnockout && (
-            <button type="button" className="primary-action" onClick={nextRound}>
-              Nächste Runde
+        {!knockoutEnded && (
+          <div className="actions">
+            <button type="button" className="secondary-action" onClick={returnToMenu}>
+              Zum Menü
             </button>
-          )}
-        </div>
+            <button type="button" className="secondary-action" onClick={restartGame}>
+              Neu starten
+            </button>
+            {!isKnockout && (
+              <button type="button" className="primary-action" onClick={nextRound}>
+                Nächste Runde
+              </button>
+            )}
+          </div>
+        )}
       </footer>
-
-      {drag && (
-        <div
-          className="drag-preview"
-          style={{
-            left: `${drag.x}px`,
-            top: `${drag.y}px`,
-          }}
-          aria-hidden="true"
-        >
-          <img src={round.entry.imageUrl} alt="" draggable="false" />
-        </div>
-      )}
     </main>
   )
 }
