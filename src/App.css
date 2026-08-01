@@ -35,6 +35,151 @@ h1 {
   letter-spacing: 0;
 }
 
+.menu-shell {
+  grid-template-rows: auto 1fr;
+}
+
+.menu-header {
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 18px;
+}
+
+.main-menu {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(280px, 420px);
+  gap: 22px;
+  align-items: start;
+}
+
+.mode-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.mode-card,
+.leaderboard-panel,
+.game-over-panel {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.mode-card {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+  min-height: 250px;
+  padding: 18px;
+}
+
+.mode-card h2,
+.leaderboard-panel h2 {
+  margin: 0;
+  color: var(--text-h);
+  font-size: 26px;
+  line-height: 1.12;
+  letter-spacing: 0;
+}
+
+.mode-card p {
+  margin: 0;
+}
+
+.mode-kicker {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.mode-card .primary-action {
+  align-self: end;
+  width: 100%;
+}
+
+.leaderboard-panel {
+  min-height: 250px;
+  padding: 18px;
+}
+
+.leaderboard-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 12px;
+  align-items: start;
+  margin-bottom: 12px;
+}
+
+.leaderboard-head .eyebrow {
+  grid-column: 1 / -1;
+}
+
+.leaderboard-status {
+  align-self: center;
+  min-width: 58px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.leaderboard-status.is-global {
+  border-color: #147d3f;
+  color: #147d3f;
+}
+
+.leaderboard-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.leaderboard-list li {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 36px;
+  padding: 7px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+}
+
+.leaderboard-list li:last-child {
+  border-bottom: 0;
+}
+
+.leaderboard-rank {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.leaderboard-name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-h);
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leaderboard-list strong {
+  color: var(--text-h);
+  font-size: 18px;
+}
+
+.leaderboard-empty {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
 .scoreboard {
   display: grid;
   grid-template-columns: repeat(3, minmax(80px, 1fr));
@@ -121,6 +266,7 @@ h1 {
 .portrait-card:focus-visible,
 .party-target:focus-visible,
 .mode-switch button:focus-visible,
+.score-form-row input:focus-visible,
 .primary-action:focus-visible,
 .secondary-action:focus-visible {
   outline: 3px solid var(--focus);
@@ -212,6 +358,49 @@ h1 {
 
 .feedback strong {
   color: var(--text-h);
+}
+
+.game-over-panel {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  text-align: left;
+}
+
+.game-over-panel label {
+  color: var(--text-h);
+  font-weight: 800;
+}
+
+.score-form-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.score-form-row input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0 12px;
+  color: var(--text-h);
+  background: var(--bg);
+  font: inherit;
+  font-weight: 700;
+}
+
+.name-counter {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.game-over-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .plenary-area {
@@ -487,6 +676,15 @@ h1 {
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .main-menu,
+  .mode-list {
+    grid-template-columns: 1fr;
+  }
+
+  .mode-card {
+    min-height: 0;
+  }
+
   .mode-switch {
     width: 100%;
   }
@@ -537,10 +735,16 @@ h1 {
 
   .actions {
     width: 100%;
+    flex-wrap: wrap;
   }
 
   .primary-action,
   .secondary-action {
     flex: 1;
+  }
+
+  .score-form-row,
+  .game-over-actions {
+    grid-template-columns: 1fr;
   }
 }

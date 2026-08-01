@@ -7,6 +7,12 @@ import {
   pickEntry,
   updateScore,
 } from './lib/gameLogic'
+import {
+  PLAYER_NAME_MAX_LENGTH,
+  addLeaderboardEntry,
+  loadLeaderboard,
+  saveLeaderboard,
+} from './lib/leaderboard'
 import './App.css'
 
 function createRound(usedIds = []) {
@@ -28,15 +34,31 @@ function getNextUsedIds(usedIds, entryId) {
 }
 
 const initialScore = { correct: 0, total: 0, streak: 0 }
+const LEADERBOARD_ENDPOINT = '/.netlify/functions/leaderboard'
 const gameModes = [
-  { id: 'endless', label: 'Endlos' },
-  { id: 'knockout', label: 'K.o.-Serie' },
+  {
+    id: 'endless',
+    label: 'Endlos',
+    kicker: 'Freies Spiel',
+    summary: 'Runden ohne Ende, Fehler setzen nur die Serie zurück.',
+  },
+  {
+    id: 'knockout',
+    label: 'K.o.-Serie',
+    kicker: 'Punkte-Modus',
+    summary: 'Jeder richtige Tipp zählt, der erste Fehler beendet den Lauf.',
+  },
 ]
 
 function App() {
-  const [mode, setMode] = useState('endless')
+  const [screen, setScreen] = useState('menu')
+  const [mode, setMode] = useState(null)
   const [score, setScore] = useState(initialScore)
-  const [bestKnockoutScore, setBestKnockoutScore] = useState(0)
+  const [leaderboard, setLeaderboard] = useState(() => loadLeaderboard())
+  const [leaderboardState, setLeaderboardState] = useState('loading')
+  const [playerName, setPlayerName] = useState('')
+  const [scoreSaved, setScoreSaved] = useState(false)
+  const [isSavingScore, setIsSavingScore] = useState(false)
   const [usedIds, setUsedIds] = useState([])
   const [round, setRound] = useState(() => createRound())
   const [result, setResult] = useState(null)
@@ -55,10 +77,51 @@ function App() {
   const isKnockout = mode === 'knockout'
   const knockoutEnded = isKnockout && result && !result.correct
   const imageLoading = loadedImageUrl !== round.entry.imageUrl
+  const activeMode = gameModes.find((gameMode) => gameMode.id === mode)
   const chamberTargets = useMemo(
     () => [...round.targets].sort((a, b) => (a.seatOrder ?? 70) - (b.seatOrder ?? 70)),
     [round.targets],
   )
+
+  useEffect(() => {
+    let active = true
+
+    async function refreshLeaderboard() {
+      try {
+        const entries = await requestGlobalLeaderboard()
+        if (!active) return
+        setLeaderboard(entries)
+        saveLeaderboard(entries)
+        setLeaderboardState('global')
+      } catch {
+        if (!active) return
+        setLeaderboard(loadLeaderboard())
+        setLeaderboardState('local')
+      }
+    }
+
+    refreshLeaderboard()
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const startGame = useCallback((nextMode) => {
+    const nextRoundState = createRound()
+    setScreen('game')
+    setMode(nextMode)
+    setScore(initialScore)
+    setUsedIds([])
+    setRound(nextRoundState)
+    setResult(null)
+    setSelected(false)
+    setDrag(null)
+    setLoadedImageUrl(null)
+    setPlayerName('')
+    setScoreSaved(false)
+    setIsSavingScore(false)
+  }, [])
 
   const nextRound = useCallback(() => {
     const nextUsedIds = getNextUsedIds(usedIds, round.entry.id)
@@ -67,6 +130,7 @@ function App() {
     setResult(null)
     setSelected(false)
     setDrag(null)
+    setLoadedImageUrl(null)
     portraitRef.current?.focus()
   }, [round.entry.id, usedIds])
 
@@ -79,6 +143,21 @@ function App() {
 
     return () => window.clearTimeout(timeoutId)
   }, [isKnockout, nextRound, result?.correct])
+
+  function returnToMenu() {
+    setScreen('menu')
+    setMode(null)
+    setResult(null)
+    setSelected(false)
+    setDrag(null)
+    setPlayerName('')
+    setScoreSaved(false)
+    setIsSavingScore(false)
+  }
+
+  function restartGame() {
+    startGame(mode ?? 'endless')
+  }
 
   function registerTarget(id, node) {
     if (node) {
@@ -106,13 +185,7 @@ function App() {
   function submitAnswer(partyId) {
     if (answered || !partyId) return
     const correct = isCorrectDrop(round.entry, partyId)
-    setScore((currentScore) => {
-      const nextScore = updateScore(currentScore, correct)
-      if (mode === 'knockout') {
-        setBestKnockoutScore((bestScore) => Math.max(bestScore, nextScore.correct))
-      }
-      return nextScore
-    })
+    setScore((currentScore) => updateScore(currentScore, correct))
     setResult({
       partyId,
       correct,
@@ -120,25 +193,29 @@ function App() {
     setSelected(false)
   }
 
-  function resetGame() {
-    const nextRoundState = createRound()
-    setScore(initialScore)
-    setUsedIds([])
-    setRound(nextRoundState)
-    setResult(null)
-    setSelected(false)
-    setDrag(null)
-  }
+  async function handleSaveScore(event) {
+    event.preventDefault()
+    if (!knockoutEnded || scoreSaved || isSavingScore) return
 
-  function changeMode(nextMode) {
-    if (nextMode === mode) return
-    setMode(nextMode)
-    setScore(initialScore)
-    setUsedIds([])
-    setRound(createRound())
-    setResult(null)
-    setSelected(false)
-    setDrag(null)
+    const fallbackEntries = addLeaderboardEntry(leaderboard, {
+      name: playerName,
+      score: score.correct,
+    })
+
+    setIsSavingScore(true)
+    try {
+      const entries = await saveGlobalLeaderboardEntry(playerName, score.correct)
+      setLeaderboard(entries)
+      saveLeaderboard(entries)
+      setLeaderboardState('global')
+    } catch {
+      setLeaderboard(fallbackEntries)
+      saveLeaderboard(fallbackEntries)
+      setLeaderboardState('local')
+    } finally {
+      setScoreSaved(true)
+      setIsSavingScore(false)
+    }
   }
 
   function handlePointerDown(event) {
@@ -188,24 +265,69 @@ function App() {
     nextRound()
   }
 
+  if (screen === 'menu') {
+    return (
+      <main className="app-shell menu-shell">
+        <header className="menu-header">
+          <p className="eyebrow">Bundestag seit 1949</p>
+          <h1>Bundestag-Parteien-Quiz</h1>
+        </header>
+
+        <section className="main-menu" aria-label="Hauptmenü">
+          <div className="mode-list">
+            {gameModes.map((gameMode) => (
+              <article key={gameMode.id} className="mode-card">
+                <p className="mode-kicker">{gameMode.kicker}</p>
+                <h2>{gameMode.label}</h2>
+                <p>{gameMode.summary}</p>
+                <button
+                  type="button"
+                  className="primary-action"
+                  onClick={() => startGame(gameMode.id)}
+                >
+                  Starten
+                </button>
+              </article>
+            ))}
+          </div>
+
+          <section className="leaderboard-panel" aria-labelledby="leaderboard-title">
+            <div className="leaderboard-head">
+              <p className="eyebrow">K.o.-Serie</p>
+              <h2 id="leaderboard-title">Top 20</h2>
+              <span className={`leaderboard-status is-${leaderboardState}`}>
+                {leaderboardState === 'global'
+                  ? 'Global'
+                  : leaderboardState === 'loading'
+                    ? 'Lädt'
+                    : 'Lokal'}
+              </span>
+            </div>
+            {leaderboard.length > 0 ? (
+              <ol className="leaderboard-list">
+                {leaderboard.map((entry, index) => (
+                  <li key={entry.id}>
+                    <span className="leaderboard-rank">{index + 1}</span>
+                    <span className="leaderboard-name">{entry.name}</span>
+                    <strong>{entry.score}</strong>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="leaderboard-empty">Noch keine Einträge.</p>
+            )}
+          </section>
+        </section>
+      </main>
+    )
+  }
+
   return (
     <main className="app-shell">
       <header className="topbar">
         <div>
-          <p className="eyebrow">Bundestag seit 1949</p>
+          <p className="eyebrow">{activeMode?.label ?? 'Spiel'}</p>
           <h1>Bundestag-Parteien-Quiz</h1>
-        </div>
-        <div className="mode-switch" role="group" aria-label="Spielmodus">
-          {gameModes.map((gameMode) => (
-            <button
-              key={gameMode.id}
-              type="button"
-              className={mode === gameMode.id ? 'is-active' : ''}
-              onClick={() => changeMode(gameMode.id)}
-            >
-              {gameMode.label}
-            </button>
-          ))}
         </div>
         <dl className="scoreboard" aria-label="Spielstand">
           <div>
@@ -215,8 +337,8 @@ function App() {
             </dd>
           </div>
           <div>
-            <dt>{isKnockout ? 'Bestwert' : 'Serie'}</dt>
-            <dd>{isKnockout ? bestKnockoutScore : score.streak}</dd>
+            <dt>Serie</dt>
+            <dd>{score.streak}</dd>
           </div>
           <div>
             <dt>Quote</dt>
@@ -278,6 +400,41 @@ function App() {
               </span>
             </div>
           )}
+
+          {knockoutEnded && (
+            <form className="game-over-panel" onSubmit={handleSaveScore}>
+              <label htmlFor="player-name">Name für Top 20</label>
+              <div className="score-form-row">
+                <input
+                  id="player-name"
+                  type="text"
+                  value={playerName}
+                  maxLength={PLAYER_NAME_MAX_LENGTH}
+                  onChange={(event) => setPlayerName(event.target.value)}
+                  placeholder="Name"
+                  disabled={scoreSaved || isSavingScore}
+                />
+                <button
+                  type="submit"
+                  className="primary-action"
+                  disabled={scoreSaved || isSavingScore}
+                >
+                  {isSavingScore ? 'Speichert' : scoreSaved ? 'Gespeichert' : 'Speichern'}
+                </button>
+              </div>
+              <span className="name-counter">
+                {Array.from(playerName).length}/{PLAYER_NAME_MAX_LENGTH}
+              </span>
+              <div className="game-over-actions">
+                <button type="button" className="secondary-action" onClick={restartGame}>
+                  Neu starten
+                </button>
+                <button type="button" className="secondary-action" onClick={returnToMenu}>
+                  Zum Menü
+                </button>
+              </div>
+            </form>
+          )}
         </div>
 
         <div className="plenary-area" aria-label="Parteien im Plenarsaal">
@@ -326,17 +483,17 @@ function App() {
           </a>
         </p>
         <div className="actions">
-          <button type="button" className="secondary-action" onClick={resetGame}>
+          <button type="button" className="secondary-action" onClick={returnToMenu}>
+            Zum Menü
+          </button>
+          <button type="button" className="secondary-action" onClick={restartGame}>
             Neu starten
           </button>
-          <button
-            type="button"
-            className="primary-action"
-            onClick={knockoutEnded ? resetGame : nextRound}
-            disabled={isKnockout && !knockoutEnded}
-          >
-            {knockoutEnded ? 'Neue K.o.-Serie' : 'Nächste Runde'}
-          </button>
+          {!isKnockout && (
+            <button type="button" className="primary-action" onClick={nextRound}>
+              Nächste Runde
+            </button>
+          )}
         </div>
       </footer>
 
@@ -357,3 +514,30 @@ function App() {
 }
 
 export default App
+
+async function requestGlobalLeaderboard() {
+  const response = await fetch(LEADERBOARD_ENDPOINT, {
+    headers: { accept: 'application/json' },
+  })
+  if (!response.ok) {
+    throw new Error(`Leaderboard request failed: ${response.status}`)
+  }
+  const body = await response.json()
+  return Array.isArray(body.entries) ? body.entries : []
+}
+
+async function saveGlobalLeaderboardEntry(name, score) {
+  const response = await fetch(LEADERBOARD_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ name, score }),
+  })
+  if (!response.ok) {
+    throw new Error(`Leaderboard save failed: ${response.status}`)
+  }
+  const body = await response.json()
+  return Array.isArray(body.entries) ? body.entries : []
+}
