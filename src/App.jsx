@@ -400,7 +400,8 @@ function App() {
 
       <footer className="action-row">
         <p>
-          Daten: Deutscher Bundestag, Stand {politiciansData.sources.bundestagSnapshot}.
+          Daten: {politiciansData.sources.dataProviders?.join(', ') ?? 'Deutscher Bundestag'}.
+          Bundestag-Stand: {politiciansData.sources.bundestagSnapshot}.
           Bilder: {round.entry.imageAttribution}.{' '}
           <a href={round.entry.imageSourceUrl} target="_blank" rel="noreferrer">
             Quelle

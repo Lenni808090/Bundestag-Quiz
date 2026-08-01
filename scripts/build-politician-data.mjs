@@ -12,6 +12,8 @@ const BUNDESTAG_XML_ZIP =
 const BUNDESTAG_PORTRAIT_ENDPOINT =
   'https://www.bundestag.de/ajax/filterlist/de/abgeordnete/Abgeordnete/1040594-1040594'
 const WIKIDATA_ENDPOINT = 'https://query.wikidata.org/sparql'
+const ABGEORDNETENWATCH_API = 'https://www.abgeordnetenwatch.de/api/v2'
+const ABGEORDNETENWATCH_RANGE_END = 1000
 
 const partyMeta = {
   KPD: {
@@ -56,11 +58,35 @@ const partyMeta = {
     color: '#c8a600',
     seatOrder: 46,
   },
+  VOLT: {
+    label: 'Volt',
+    fullName: 'Volt Deutschland',
+    color: '#502379',
+    seatOrder: 48,
+  },
+  PIRATEN: {
+    label: 'PIRATEN',
+    fullName: 'Piratenpartei Deutschland',
+    color: '#ff8800',
+    seatOrder: 49,
+  },
   ZENTRUM: {
     label: 'Zentrum',
     fullName: 'Deutsche Zentrumspartei',
     color: '#1f4e79',
     seatOrder: 50,
+  },
+  FREIE_WAEHLER: {
+    label: 'FW',
+    fullName: 'Freie Wähler',
+    color: '#f28c28',
+    seatOrder: 54,
+  },
+  BUENDNIS_DEUTSCHLAND: {
+    label: 'BD',
+    fullName: 'Bündnis Deutschland',
+    color: '#1f4e79',
+    seatOrder: 56,
   },
   DZP: {
     label: 'DZP',
@@ -147,6 +173,9 @@ const partyAliases = new Map([
   ['PDS/LINKE LISTE', 'LINKE'],
   ['PLOS', 'PARTEILOS'],
   ['PLOS.', 'PARTEILOS'],
+  ['FRAKTIONSLOS', 'PARTEILOS'],
+  ['FRAKTIONSFREI', 'PARTEILOS'],
+  ['GRUPPENLOS', 'PARTEILOS'],
   ['BÜNDNIS SAHRA WAGENKNECHT', 'BSW'],
   ['BSW', 'BSW'],
   ['AFD', 'AFD'],
@@ -157,6 +186,16 @@ const partyAliases = new Map([
   ['CDU/CSU', 'CDU/CSU'],
   ['SPD', 'SPD'],
   ['FDP', 'FDP'],
+  ['VOLT', 'VOLT'],
+  ['PIRATEN', 'PIRATEN'],
+  ['PIRATENPARTEI', 'PIRATEN'],
+  ['PIRATENPARTEI DEUTSCHLAND', 'PIRATEN'],
+  ['FREIE WAHLER', 'FREIE_WAEHLER'],
+  ['FREIE WAEHLER', 'FREIE_WAEHLER'],
+  ['FREIE_WAHLER', 'FREIE_WAEHLER'],
+  ['FREIE_WAEHLER', 'FREIE_WAEHLER'],
+  ['BUNDNIS DEUTSCHLAND', 'BUENDNIS_DEUTSCHLAND'],
+  ['BUENDNIS DEUTSCHLAND', 'BUENDNIS_DEUTSCHLAND'],
   ['KPD', 'KPD'],
   ['DP', 'DP'],
   ['BP', 'BP'],
@@ -181,6 +220,7 @@ function cleanText(value) {
 
 function stripDiacritics(value) {
   return cleanText(value)
+    .replace(/[\u00ad\u200b-\u200d]/g, '')
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
 }
@@ -274,6 +314,21 @@ async function fetchText(url, options = {}) {
     throw new Error(`${response.status} ${response.statusText} for ${url}`)
   }
   return response.text()
+}
+
+async function fetchJson(url, options = {}) {
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application/json',
+      'User-Agent': 'bundestag-parteien-quiz/0.1 (educational local app)',
+      ...options.headers,
+    },
+    ...options,
+  })
+  if (!response.ok) {
+    throw new Error(`${response.status} ${response.statusText} for ${url}`)
+  }
+  return response.json()
 }
 
 async function fetchXmlMembers() {
@@ -376,6 +431,90 @@ SELECT ?person ?personLabel ?image WHERE {
   return portraits
 }
 
+async function fetchWikidataPortraitsForNames(names) {
+  const uniqueNames = [...new Set(names.map(cleanText).filter(Boolean))]
+  const portraits = new Map()
+  const chunkSize = 80
+
+  for (let index = 0; index < uniqueNames.length; index += chunkSize) {
+    const chunk = uniqueNames.slice(index, index + chunkSize)
+    const values = chunk
+      .flatMap((name) => [sparqlString(name, 'de'), sparqlString(name, 'en')])
+      .join(' ')
+    const query = `
+SELECT ?person ?personLabel ?image WHERE {
+  VALUES ?personLabel { ${values} }
+  ?person rdfs:label ?personLabel;
+          wdt:P31 wd:Q5;
+          wdt:P18 ?image.
+}
+`
+    const url = `${WIKIDATA_ENDPOINT}?format=json&query=${encodeURIComponent(query)}`
+    const json = await fetchWikidataJson(url, 'Wikidata name portrait chunk')
+    if (!json) {
+      continue
+    }
+
+    for (const item of json.results?.bindings ?? []) {
+      const label = cleanText(item.personLabel?.value)
+      const imageUrl = buildCommonsThumbnailUrl(cleanText(item.image?.value))
+      const personUrl = cleanText(item.person?.value)
+      if (!label || !imageUrl) continue
+
+      const key = normalizeName(label)
+      if (portraits.has(key)) continue
+      portraits.set(key, {
+        imageUrl,
+        imageSourceUrl: personUrl,
+        imageAttribution: 'Wikimedia Commons / Wikidata',
+        imageLicense: 'See linked Wikimedia file metadata',
+      })
+    }
+
+    await sleep(800)
+  }
+
+  return portraits
+}
+
+async function fetchWikidataJson(url, label, retries = 3) {
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    const response = await fetch(url, {
+      headers: {
+        Accept: 'application/sparql-results+json',
+        'User-Agent': 'bundestag-parteien-quiz/0.1 (local educational app)',
+      },
+    })
+
+    if (response.ok) {
+      return response.json()
+    }
+
+    if (response.status !== 429 || attempt === retries) {
+      console.warn(`${label} skipped: ${response.status} ${response.statusText}`)
+      return null
+    }
+
+    await sleep(4000 * (attempt + 1))
+  }
+
+  return null
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
+function sparqlString(value, language) {
+  const escaped = cleanText(value)
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, ' ')
+  return `"${escaped}"@${language}`
+}
+
 function mapMembersToEntries(members, portraitMaps) {
   const entries = []
 
@@ -429,27 +568,137 @@ function mapMembersToEntries(members, portraitMaps) {
   })
 }
 
+async function fetchAbgeordnetenwatchCurrentMandates() {
+  const parliaments = await fetchJson(
+    `${ABGEORDNETENWATCH_API}/parliaments?range_end=${ABGEORDNETENWATCH_RANGE_END}`,
+  )
+  const currentProjects = (parliaments.data ?? [])
+    .map((parliament) => ({
+      parliamentLabel: cleanText(parliament.label_external_long || parliament.label),
+      periodId: parliament.current_project?.id,
+      periodLabel: cleanText(parliament.current_project?.label),
+    }))
+    .filter((project) => project.periodId && project.parliamentLabel !== 'EU-Parlament')
+
+  const mandates = []
+  for (const project of currentProjects) {
+    const json = await fetchJson(
+      `${ABGEORDNETENWATCH_API}/candidacies-mandates?parliament_period=${project.periodId}&range_start=0&range_end=${ABGEORDNETENWATCH_RANGE_END}`,
+    )
+    for (const mandate of json.data ?? []) {
+      if (mandate.type !== 'mandate' || mandate.end_date) continue
+      mandates.push({
+        ...mandate,
+        parliamentLabel: project.parliamentLabel,
+        periodLabel: project.periodLabel || cleanText(mandate.parliament_period?.label),
+      })
+    }
+  }
+
+  return {
+    mandates,
+    parliamentCount: currentProjects.length,
+  }
+}
+
+function mapAbgeordnetenwatchMandatesToEntries(mandates, portraits, existingEntries) {
+  const existingNames = new Set(existingEntries.map((entry) => normalizeName(entry.name)))
+  const entries = []
+
+  for (const mandate of mandates) {
+    const name = cleanText(mandate.politician?.label)
+    const normalized = normalizeName(name)
+    const partyRaw = getMandatePartyLabel(mandate)
+    const partyId = normalizeParty(partyRaw)
+    const portrait = portraits.get(normalized)
+
+    if (!name || !normalized || !partyRaw || !partyId || !portrait) continue
+    if (partyId === 'PARTEILOS' || existingNames.has(normalized)) continue
+    if (!partyMeta[partyId] && partyId.length > 14) continue
+
+    entries.push({
+      id: `aw-${mandate.id}`,
+      name,
+      partyId,
+      partyRaw,
+      imageUrl: portrait.imageUrl,
+      imageSourceUrl: portrait.imageSourceUrl,
+      imageAttribution: portrait.imageAttribution,
+      imageLicense: portrait.imageLicense,
+      birthYear: undefined,
+      deathYear: undefined,
+      terms: [],
+      mandateLabel: mandate.periodLabel,
+      dataAttribution: 'abgeordnetenwatch',
+      dataSourceUrl: mandate.politician?.abgeordnetenwatch_url,
+    })
+  }
+
+  return dedupeEntries(entries)
+}
+
+function getMandatePartyLabel(mandate) {
+  const currentFraction =
+    mandate.fraction_membership?.find((membership) => !membership.valid_until) ??
+    mandate.fraction_membership?.[0]
+  const label = cleanText(currentFraction?.fraction?.label || currentFraction?.label)
+  return label
+    .replace(/\s*\([^)]*\)\s*$/g, '')
+    .replace(/\s+seit\s+\d{2}\.\d{2}\.\d{4}$/g, '')
+    .trim()
+}
+
+function dedupeEntries(entries) {
+  const seen = new Set()
+  return entries.filter((entry) => {
+    const key = `${normalizeName(entry.name)}:${entry.partyId}`
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
 async function main() {
-  const [{ members, snapshot }, bundestagPortraits, wikidataPortraits] =
+  const [{ members, snapshot }, bundestagPortraits, wikidataPortraits, awSource] =
     await Promise.all([
       fetchXmlMembers(),
       fetchBundestagPortraits(),
       fetchWikidataPortraits(),
+      fetchAbgeordnetenwatchCurrentMandates(),
     ])
 
-  const entries = mapMembersToEntries(members, [bundestagPortraits, wikidataPortraits])
+  const bundestagEntries = mapMembersToEntries(members, [
+    bundestagPortraits,
+    wikidataPortraits,
+  ])
     .filter((entry) => entry.partyId !== 'PARTEILOS')
     .filter((entry) => partyMeta[entry.partyId] || entry.partyId.length <= 14)
+
+  const awPortraits = await fetchWikidataPortraitsForNames(
+    awSource.mandates.map((mandate) => mandate.politician?.label),
+  )
+  const awEntries = mapAbgeordnetenwatchMandatesToEntries(
+    awSource.mandates,
+    awPortraits,
+    bundestagEntries,
+  )
+
+  const entries = dedupeEntries([...bundestagEntries, ...awEntries])
     .sort((a, b) => a.name.localeCompare(b.name, 'de'))
 
   const data = {
     generatedAt: new Date().toISOString(),
     sources: {
+      dataProviders: ['Deutscher Bundestag', 'abgeordnetenwatch', 'Wikidata/Wikimedia'],
       bundestagStammdatenUrl: BUNDESTAG_XML_ZIP,
       bundestagSnapshot: snapshot,
       currentPortraitEndpoint: BUNDESTAG_PORTRAIT_ENDPOINT,
+      abgeordnetenwatchApi: ABGEORDNETENWATCH_API,
+      abgeordnetenwatchCurrentParliaments: awSource.parliamentCount,
+      abgeordnetenwatchMandatesScanned: awSource.mandates.length,
+      abgeordnetenwatchEntriesAdded: awEntries.length,
       imageFallback: 'Bundestag portraits first; Wikidata/Wikimedia when matched by name',
-      skippedEntries: members.length - entries.length,
+      skippedEntries: members.length + awSource.mandates.length - entries.length,
     },
     parties: buildPartyList(entries),
     entries,
@@ -463,7 +712,7 @@ async function main() {
   )
 
   console.log(
-    `Wrote ${entries.length} entries across ${data.parties.length} parties from ${members.length} Bundestag records.`,
+    `Wrote ${entries.length} entries across ${data.parties.length} parties (${bundestagEntries.length} Bundestag, ${awEntries.length} abgeordnetenwatch additions).`,
   )
 }
 
