@@ -1,9 +1,10 @@
 {
-  "generatedAt": "2026-08-01T16:33:08.693Z",
+  "generatedAt": "2026-08-01T16:48:12.034Z",
   "sources": {
     "dataProviders": [
       "Deutscher Bundestag",
       "abgeordnetenwatch",
+      "Jugendorganisationen",
       "Wikidata/Wikimedia"
     ],
     "bundestagStammdatenUrl": "https://www.bundestag.de/resource/blob/472878/MdB-Stammdaten.zip",
@@ -13,8 +14,32 @@
     "abgeordnetenwatchCurrentParliaments": 17,
     "abgeordnetenwatchMandatesScanned": 2528,
     "abgeordnetenwatchEntriesAdded": 918,
+    "youthOrganizations": [
+      {
+        "label": "Jusos",
+        "url": "https://jusos.de/wer-wir-sind/bundesvorstand/"
+      },
+      {
+        "label": "Junge Liberale",
+        "url": "https://www.fdp.de/bundeskonferenz-der-julis-von-abschied-zu-aufbruch"
+      },
+      {
+        "label": "Junge Union",
+        "url": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+      },
+      {
+        "label": "Grüne Jugend",
+        "url": "https://gruene-jugend.de/bundesvorstand/"
+      },
+      {
+        "label": "Linksjugend ['solid]",
+        "url": "https://www.linksjugend-solid.de/verband/bundessprecherinnenrat/"
+      }
+    ],
+    "youthOrganizationCandidatesScanned": 140,
+    "youthOrganizationEntriesAdded": 51,
     "imageFallback": "Bundestag portraits first; Wikidata/Wikimedia when matched by name",
-    "skippedEntries": 4085
+    "skippedEntries": 4174
   },
   "parties": [
     {
@@ -988,6 +1013,20 @@
       "mandateLabel": "Sachsen 2024 - 2029",
       "dataAttribution": "abgeordnetenwatch",
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/alexander-wiesner"
+    },
+    {
+      "id": "youth-junge-union-alexander-zeyer",
+      "name": "Alexander Zeyer",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/CDU_Zeyer_Alexander.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q29570171",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "11004260",
@@ -2796,6 +2835,20 @@
       ]
     },
     {
+      "id": "youth-junge-union-ansgar-mertens",
+      "name": "Ansgar Mertens",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/AMertens.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q110647197",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "11003480",
       "name": "Antje Blumenthal",
       "partyId": "CDU/CSU",
@@ -3958,6 +4011,20 @@
       "terms": [
         21
       ]
+    },
+    {
+      "id": "youth-junge-union-bernd-sibler",
+      "name": "Bernd Sibler",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/2011-11-09_BerndSibler.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q824242",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "11002799",
@@ -7543,6 +7610,20 @@
       ]
     },
     {
+      "id": "youth-jusos-dario-schramm",
+      "name": "Dario Schramm",
+      "partyId": "SPD",
+      "partyRaw": "SPD",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dario_Schramm_%282020%29.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q123490031",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Jusos",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://jusos.de/wer-wir-sind/bundesvorstand/"
+    },
+    {
       "id": "11005581",
       "name": "Dario Seifert",
       "partyId": "AFD",
@@ -8442,6 +8523,20 @@
       "mandateLabel": "Hamburg 2025 - 2029",
       "dataAttribution": "abgeordnetenwatch",
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/dirk-kienscherf"
+    },
+    {
+      "id": "youth-julis-dirk-niebel",
+      "name": "Dirk Niebel",
+      "partyId": "FDP",
+      "partyRaw": "FDP",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dirk_Niebel_1c399_0357.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q63415",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Liberale",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.fdp.de/bundeskonferenz-der-julis-von-abschied-zu-aufbruch"
     },
     {
       "id": "aw-68318",
@@ -18439,6 +18534,20 @@
       ]
     },
     {
+      "id": "youth-gruene-jugend-erik-marquardt",
+      "name": "Erik Marquardt",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/1719215902206_20240620_MARQUARDT_Erik_DE_005.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q18222891",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
+    },
+    {
       "id": "aw-63587",
       "name": "Erik Stohn",
       "partyId": "SPD",
@@ -19505,6 +19614,34 @@
       ]
     },
     {
+      "id": "youth-junge-union-frank-helmenstein",
+      "name": "Frank Helmenstein",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/B%C3%BCrgermeister_Frank_Helmenstein.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q15295422",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
+      "id": "youth-junge-union-frank-henkel",
+      "name": "Frank Henkel",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/2016-12-08_Frank_Henkel_by_Sandro_Halank.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q95898",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "aw-57166",
       "name": "Frank Henning",
       "partyId": "SPD",
@@ -20093,6 +20230,20 @@
       "mandateLabel": "Mecklenburg-Vorpommern 2021 - 2026",
       "dataAttribution": "abgeordnetenwatch",
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/franz-robert-liskow"
+    },
+    {
+      "id": "youth-julis-franziska-brandmann",
+      "name": "Franziska Brandmann",
+      "partyId": "FDP",
+      "partyRaw": "FDP",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/2024-10-21-Franziska_Brandmann-Hart_aber_fair-0009.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q109562947",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Liberale",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.fdp.de/bundeskonferenz-der-julis-von-abschied-zu-aufbruch"
     },
     {
       "id": "aw-54229",
@@ -20816,6 +20967,20 @@
         5,
         6
       ]
+    },
+    {
+      "id": "youth-junge-union-georg-nu-lein",
+      "name": "Georg Nüßlein",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Georg_N%C3%BC%C3%9Flein_2012.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q1505506",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "11001687",
@@ -21885,6 +22050,20 @@
       ]
     },
     {
+      "id": "youth-junge-union-gunther-schacht",
+      "name": "Günther Schacht",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/G%C3%BCnther_Schacht.png?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q1561781",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "11000752",
       "name": "Gustav Gundelach",
       "partyId": "KPD",
@@ -22332,6 +22511,20 @@
         15,
         16
       ]
+    },
+    {
+      "id": "youth-junge-union-hans-reichhart",
+      "name": "Hans Reichhart",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/2017-05-18_Dr_Hans_Reichhart_1722.JPG?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q14920419",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "11002094",
@@ -24393,6 +24586,20 @@
       ]
     },
     {
+      "id": "youth-jusos-herfried-munkler",
+      "name": "Herfried Münkler",
+      "partyId": "SPD",
+      "partyRaw": "SPD",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Prof._Herfried_M%C3%BCnkler_%28cropped%29.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q108088",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Jusos",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://jusos.de/wer-wir-sind/bundesvorstand/"
+    },
+    {
       "id": "11001945",
       "name": "Heribert Scharrenbroich",
       "partyId": "CDU/CSU",
@@ -25488,6 +25695,20 @@
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/ingo-schon"
     },
     {
+      "id": "youth-junge-union-ingo-senftleben",
+      "name": "Ingo Senftleben",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/2018-12-07_Ingo_Senftleben_CDU_Pateitag_in_Hamburg-2617_%28cropped%29.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q1663205",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "11005600",
       "name": "Ingo Vogel",
       "partyId": "SPD",
@@ -25791,6 +26012,20 @@
         20,
         21
       ]
+    },
+    {
+      "id": "youth-gruene-jugend-jakob-blasel",
+      "name": "Jakob Blasel",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Jakob_Blasel-republica19.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q62994804",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
     },
     {
       "id": "11000386",
@@ -26553,6 +26788,20 @@
         19,
         20
       ]
+    },
+    {
+      "id": "youth-gruene-jugend-jette-nietzard",
+      "name": "Jette Nietzard",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Jette_Nietzard_Feb_2025.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q130577494",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
     },
     {
       "id": "aw-56154",
@@ -28404,6 +28653,20 @@
       ]
     },
     {
+      "id": "youth-jusos-jurgen-renner",
+      "name": "Jürgen Renner",
+      "partyId": "SPD",
+      "partyRaw": "SPD",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/J%C3%BCrgen_Renner-7415.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q29167166",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Jusos",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://jusos.de/wer-wir-sind/bundesvorstand/"
+    },
+    {
       "id": "aw-63491",
       "name": "Jürgen Treutler",
       "partyId": "AFD",
@@ -28654,6 +28917,20 @@
         18,
         19
       ]
+    },
+    {
+      "id": "youth-junge-union-karl-a-lamers",
+      "name": "Karl A. Lamers",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Karl_Lamers_July_2005.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q118715",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "11000170",
@@ -28995,6 +29272,20 @@
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/karl-ludwig-von-danwitz"
     },
     {
+      "id": "youth-junge-union-karl-theodor-zu-guttenberg",
+      "name": "Karl-Theodor zu Guttenberg",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Karl-Theodor_Freiherr_von_und_zu_Guttenberg.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q76924",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "11004690",
       "name": "Karlheinz Busen",
       "partyId": "FDP",
@@ -29008,6 +29299,20 @@
         19,
         20
       ]
+    },
+    {
+      "id": "youth-gruene-jugend-karoline-otte",
+      "name": "Karoline Otte",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Karoline_Otte%2C_2022.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q107305149",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
     },
     {
       "id": "11004752",
@@ -29162,6 +29467,20 @@
         18,
         19
       ]
+    },
+    {
+      "id": "youth-gruene-jugend-katharina-muller",
+      "name": "Katharina Müller",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Katharina_M%C3%BCller_in_2018.png?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q22666879",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
     },
     {
       "id": "aw-58157",
@@ -30213,6 +30532,20 @@
       ]
     },
     {
+      "id": "youth-jusos-klaus-wowereit",
+      "name": "Klaus Wowereit",
+      "partyId": "SPD",
+      "partyRaw": "SPD",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/MKr20441_Klaus_Wowereit_%28Berlinale_2023%29.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q8863",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Jusos",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://jusos.de/wer-wir-sind/bundesvorstand/"
+    },
+    {
       "id": "11004281",
       "name": "Klaus-Dieter Gröhler",
       "partyId": "CDU/CSU",
@@ -31219,6 +31552,20 @@
       ]
     },
     {
+      "id": "youth-jusos-lilly-blaudszun",
+      "name": "Lilly Blaudszun",
+      "partyId": "SPD",
+      "partyRaw": "SPD",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Lilly_Blaudszun_2019.jpeg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q94998780",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Jusos",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://jusos.de/wer-wir-sind/bundesvorstand/"
+    },
+    {
       "id": "aw-63558",
       "name": "Linda Stark",
       "partyId": "LINKE",
@@ -31476,6 +31823,20 @@
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/ludwig-scheetz"
     },
     {
+      "id": "youth-junge-union-ludwig-schnur",
+      "name": "Ludwig Schnur",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Schnur_Ludwig_1.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q1874979",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "11002248",
       "name": "Ludwig Stiegler",
       "partyId": "SPD",
@@ -31509,6 +31870,20 @@
       "terms": [
         21
       ]
+    },
+    {
+      "id": "youth-gruene-jugend-luisa-neubauer",
+      "name": "Luisa Neubauer",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/2025-04-29-Luisa_Neubauer-Maischberger-2989.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q61625543",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
     },
     {
       "id": "11000881",
@@ -32191,6 +32566,20 @@
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/marc-schemmel"
     },
     {
+      "id": "youth-junge-union-marc-speicher",
+      "name": "Marc Speicher",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Marc_Speicher-7352.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q29380574",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "aw-54251",
       "name": "Marc Vallendar",
       "partyId": "AFD",
@@ -32217,6 +32606,20 @@
       "terms": [
         21
       ]
+    },
+    {
+      "id": "youth-gruene-jugend-marcel-emmerich",
+      "name": "Marcel Emmerich",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Marcel_Emmerich_November_2014.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q106807099",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
     },
     {
       "id": "aw-56345",
@@ -35617,6 +36020,20 @@
       ]
     },
     {
+      "id": "youth-junge-union-monika-hohlmeier",
+      "name": "Monika Hohlmeier",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/1719215928809_20240620_HOHLMEIER_Monika_DE_003.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q78415",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "aw-52012",
       "name": "Monika Hohmann",
       "partyId": "LINKE",
@@ -35915,6 +36332,20 @@
       "terms": [
         19
       ]
+    },
+    {
+      "id": "youth-gruene-jugend-nicola-dichant",
+      "name": "Nicola Dichant",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Nicola_Dichant%2C_2021_%28cropped%29.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q114742255",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
     },
     {
       "id": "aw-70440",
@@ -36270,6 +36701,20 @@
         20,
         21
       ]
+    },
+    {
+      "id": "youth-julis-noah-trojanowski",
+      "name": "Noah Trojanowski",
+      "partyId": "FDP",
+      "partyRaw": "FDP",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Noah_Trojanowski.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q108196797",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Liberale",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.fdp.de/bundeskonferenz-der-julis-von-abschied-zu-aufbruch"
     },
     {
       "id": "11005582",
@@ -36808,6 +37253,34 @@
       "mandateLabel": "Hessen 2024 - 2029",
       "dataAttribution": "abgeordnetenwatch",
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/oliver-ulloth"
+    },
+    {
+      "id": "youth-junge-union-oliver-wittke",
+      "name": "Oliver Wittke",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Oliver_Wittke_2013.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q109375",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
+      "id": "youth-gruene-jugend-omid-nouripour",
+      "name": "Omid Nouripour",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Omid_Nouripour_-_1_%28cropped%29.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q71635",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
     },
     {
       "id": "aw-54185",
@@ -37460,6 +37933,20 @@
       ]
     },
     {
+      "id": "youth-junge-union-peter-altmaier",
+      "name": "Peter Altmaier",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Hart_aber_fair_-_2023-12-04-40265.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q65539",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "11004004",
       "name": "Peter Aumer",
       "partyId": "CDU/CSU",
@@ -37475,6 +37962,20 @@
         20,
         21
       ]
+    },
+    {
+      "id": "youth-junge-union-peter-beuth",
+      "name": "Peter Beuth",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/MJK00741_Peter_Beuth.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q1536219",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "11004010",
@@ -37584,6 +38085,20 @@
         12,
         13
       ]
+    },
+    {
+      "id": "youth-jusos-peter-feldmann",
+      "name": "Peter Feldmann",
+      "partyId": "SPD",
+      "partyRaw": "SPD",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/2017-12-17_Festhallenturnier_Frankfurt_Peter_Feldmann-4556.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q96506",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Jusos",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://jusos.de/wer-wir-sind/bundesvorstand/"
     },
     {
       "id": "11004714",
@@ -38202,6 +38717,20 @@
       ]
     },
     {
+      "id": "youth-jusos-philipp-turmer",
+      "name": "Philipp Türmer",
+      "partyId": "SPD",
+      "partyRaw": "SPD",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Philipp_T%C3%BCrmer_Portrait.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q123478087",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Jusos",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://jusos.de/wer-wir-sind/bundesvorstand/"
+    },
+    {
       "id": "11005517",
       "name": "Pierre Lamely",
       "partyId": "AFD",
@@ -38401,6 +38930,20 @@
         13,
         14
       ]
+    },
+    {
+      "id": "youth-junge-union-q62858",
+      "name": "Q62858",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/KAS-Barschel%2C_Uwe-Bild-7734-1_%28cropped%29.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q62858",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "aw-54173",
@@ -38757,6 +39300,20 @@
       "mandateLabel": "Hessen 2024 - 2029",
       "dataAttribution": "abgeordnetenwatch",
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/ralf-norbert-bartelt"
+    },
+    {
+      "id": "youth-junge-union-ralph-alexander-lorz",
+      "name": "Ralph Alexander Lorz",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Alexander_Lorz_%28Martin_Rulsch%29_2013-02-28_2.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q14191018",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "11004021",
@@ -39169,6 +39726,20 @@
       ]
     },
     {
+      "id": "youth-gruene-jugend-renas-sahin",
+      "name": "Rênas Sahin",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/R%C3%AAnas_Sahin%2C_2021_%28cropped%29.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q114742326",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
+    },
+    {
       "id": "11004654",
       "name": "Renata Alt",
       "partyId": "FDP",
@@ -39339,6 +39910,20 @@
       "terms": [
         20
       ]
+    },
+    {
+      "id": "youth-gruene-jugend-ricarda-lang",
+      "name": "Ricarda Lang",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Ricarda_Lang-8728.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q42841188",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
     },
     {
       "id": "11000120",
@@ -39834,6 +40419,20 @@
       "terms": [
         10
       ]
+    },
+    {
+      "id": "youth-junge-union-roland-woller",
+      "name": "Roland Wöller",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/2022-03-28_Empfang_des_S%C3%A4chsischen_Ministerpr%C3%A4sidenten_f%C3%BCr_die_Teilnehmenden_der_Olympischen_Winterspiele_2022_by_Sandro_Halank%E2%80%93022.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q121327",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "11003570",
@@ -40804,6 +41403,20 @@
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/sandro-kirchner"
     },
     {
+      "id": "youth-junge-union-sarah-gillen",
+      "name": "Sarah Gillen",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Sarah_Gillen_%28hoch%29.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q29437060",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "aw-56260",
       "name": "Sarah Philipp",
       "partyId": "SPD",
@@ -40846,6 +41459,20 @@
       "terms": [
         21
       ]
+    },
+    {
+      "id": "youth-gruene-jugend-sarah-lee-heinrich",
+      "name": "Sarah-Lee Heinrich",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/BDK_Karlsruhe_Nov_2023_Sarah-Lee_Heinrich_GJ_1_craped.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q108855005",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
     },
     {
       "id": "aw-70436",
@@ -41251,6 +41878,20 @@
         19,
         21
       ]
+    },
+    {
+      "id": "youth-linksjugend-solid-sebastian-walter",
+      "name": "Sebastian Walter",
+      "partyId": "LINKE",
+      "partyRaw": "Die Linke",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Sebastian_walter_linke.png?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q67025059",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Linksjugend ['solid]",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.linksjugend-solid.de/verband/bundessprecherinnenrat/"
     },
     {
       "id": "aw-56271",
@@ -41660,6 +42301,20 @@
         12,
         13
       ]
+    },
+    {
+      "id": "youth-junge-union-silke-gori-en",
+      "name": "Silke Gorißen",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Verleihung_des_Staatspreises_des_Landes_Nordrhein-Westfalen_an_Angela_Merkel-1857.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q108526006",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "aw-57118",
@@ -43528,6 +44183,20 @@
       ]
     },
     {
+      "id": "youth-gruene-jugend-tarek-al-wazir",
+      "name": "Tarek Al-Wazir",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/2016-02-04_Tarek_Al-Wazir_-_MdL_Hessen_-_3647-2.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q106206",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
+    },
+    {
       "id": "aw-63473",
       "name": "Thadäus König",
       "partyId": "CDU/CSU",
@@ -44552,6 +45221,20 @@
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/timo-ahr"
     },
     {
+      "id": "youth-junge-union-timo-mildau",
+      "name": "Timo Mildau",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Timo_Mildau.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q55333497",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "11005207",
       "name": "Timo Schisanowski",
       "partyId": "SPD",
@@ -44794,6 +45477,20 @@
       "mandateLabel": "Sachsen-Anhalt 2021 - 2026",
       "dataAttribution": "abgeordnetenwatch",
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/tobias-krull"
+    },
+    {
+      "id": "youth-gruene-jugend-tobias-lindner",
+      "name": "Tobias Lindner",
+      "partyId": "GRUENE",
+      "partyRaw": "Bündnis 90/Die Grünen",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/2019-04-12_Tobias_Lindner-_MG_0168.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q2437890",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Grüne Jugend",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://gruene-jugend.de/bundesvorstand/"
     },
     {
       "id": "11004850",
@@ -45181,6 +45878,20 @@
       "mandateLabel": "Bundestag 2025 - 2029",
       "dataAttribution": "abgeordnetenwatch",
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/udo-hemmelgarn"
+    },
+    {
+      "id": "youth-junge-union-udo-recktenwald",
+      "name": "Udo Recktenwald",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Udo_Recktenwald_Kids_in_Bewegung.JPG?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q2473332",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "11004397",
@@ -45985,6 +46696,20 @@
       ]
     },
     {
+      "id": "youth-junge-union-uwe-conradt",
+      "name": "Uwe Conradt",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Uwe_Conradt.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q1805993",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
+    },
+    {
       "id": "aw-57136",
       "name": "Uwe Dorendorf",
       "partyId": "CDU/CSU",
@@ -46485,6 +47210,20 @@
       "mandateLabel": "Schleswig-Holstein 2022 - 2027",
       "dataAttribution": "abgeordnetenwatch",
       "dataSourceUrl": "https://www.abgeordnetenwatch.de/profile/volker-nielsen"
+    },
+    {
+      "id": "youth-junge-union-volker-oberhausen",
+      "name": "Volker Oberhausen",
+      "partyId": "CDU/CSU",
+      "partyRaw": "CDU/CSU",
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Volker_Oberhausen-7193.jpg?width=520",
+      "imageSourceUrl": "http://www.wikidata.org/entity/Q30954698",
+      "imageAttribution": "Wikimedia Commons / Wikidata",
+      "imageLicense": "See linked Wikimedia file metadata",
+      "terms": [],
+      "mandateLabel": "Junge Union",
+      "dataAttribution": "Jugendorganisationen / Wikidata",
+      "dataSourceUrl": "https://www.junge-union.de/ueber-uns/bundesvorstand/"
     },
     {
       "id": "aw-60536",

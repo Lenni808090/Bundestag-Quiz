@@ -38,6 +38,35 @@ describe('gameLogic', () => {
     assert.equal(entry.id, '1')
   })
 
+  it('can pick special rare entries before normal weighting', () => {
+    const specialEntries = [
+      ...entries,
+      { id: 'rare-1', partyId: 'SPD', birthYear: undefined, terms: [], isSpecialRare: true },
+    ]
+    const randomValues = [0.01, 0]
+
+    const entry = pickEntry(specialEntries, [], () => randomValues.shift() ?? 0, {
+      historicalChance: 1,
+      specialChance: 0.02,
+    })
+
+    assert.equal(entry.id, 'rare-1')
+  })
+
+  it('does not block special rare entries after they were used', () => {
+    const specialEntries = [
+      ...entries,
+      { id: 'rare-1', partyId: 'SPD', birthYear: undefined, terms: [], isSpecialRare: true },
+    ]
+    const randomValues = [0.01, 0]
+
+    const entry = pickEntry(specialEntries, ['rare-1'], () => randomValues.shift() ?? 0, {
+      specialChance: 0.02,
+    })
+
+    assert.equal(entry.id, 'rare-1')
+  })
+
   it('caps large party pools when picking a round', () => {
     const skewedEntries = [
       { id: 'cdu-1', partyId: 'CDU/CSU', birthYear: 1980, terms: [21] },

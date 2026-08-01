@@ -1,6 +1,7 @@
 export const ROUND_TARGET_COUNT = 6
 const DEFAULT_HISTORICAL_CHANCE = 0.7
 const DEFAULT_PARTY_SAMPLE_CAP = 120
+const DEFAULT_SPECIAL_CHANCE = 0.02
 
 export function pickEntry(
   entries,
@@ -9,14 +10,22 @@ export function pickEntry(
   {
     historicalChance = DEFAULT_HISTORICAL_CHANCE,
     partySampleCap = DEFAULT_PARTY_SAMPLE_CAP,
+    specialChance = DEFAULT_SPECIAL_CHANCE,
   } = {},
 ) {
   const used = new Set(usedIds)
   const remaining = entries.filter((entry) => !used.has(entry.id))
   const basePool = remaining.length > 0 ? remaining : entries
-  const historicalPool = basePool.filter(isHistoricalEntry)
+  const specialPool = entries.filter((entry) => entry.isSpecialRare)
+  if (specialPool.length > 0 && random() < specialChance) {
+    return specialPool[Math.floor(random() * specialPool.length)]
+  }
+
+  const normalPool = basePool.filter((entry) => !entry.isSpecialRare)
+  const normalBasePool = normalPool.length > 0 ? normalPool : basePool
+  const historicalPool = normalBasePool.filter(isHistoricalEntry)
   const pool =
-    historicalPool.length > 0 && random() < historicalChance ? historicalPool : basePool
+    historicalPool.length > 0 && random() < historicalChance ? historicalPool : normalBasePool
   return pickFromCappedPartyPool(pool, random, partySampleCap)
 }
 

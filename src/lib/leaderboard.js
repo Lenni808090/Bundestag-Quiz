@@ -1,6 +1,7 @@
 export const LEADERBOARD_LIMIT = 20
 export const PLAYER_NAME_MAX_LENGTH = 14
 export const LEADERBOARD_STORAGE_KEY = 'bundestag-parteien-quiz.knockout-leaderboard.v1'
+export const PLAYER_NAME_STORAGE_KEY = 'bundestag-parteien-quiz.player-name.v1'
 
 export function normalizePlayerName(value) {
   const compactName = String(value ?? '')
@@ -53,6 +54,22 @@ export function loadLeaderboard(storage = getDefaultStorage()) {
 export function saveLeaderboard(entries, storage = getDefaultStorage()) {
   if (!storage) return
   storage.setItem(LEADERBOARD_STORAGE_KEY, JSON.stringify(rankLeaderboard(entries)))
+}
+
+export function loadPlayerName(storage = getDefaultStorage()) {
+  if (!storage) return ''
+
+  try {
+    const name = storage.getItem(PLAYER_NAME_STORAGE_KEY)
+    return name ? normalizePlayerName(name) : ''
+  } catch {
+    return ''
+  }
+}
+
+export function savePlayerName(name, storage = getDefaultStorage()) {
+  if (!storage) return
+  storage.setItem(PLAYER_NAME_STORAGE_KEY, normalizePlayerName(name))
 }
 
 function getDefaultStorage() {

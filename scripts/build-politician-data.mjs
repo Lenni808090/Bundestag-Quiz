@@ -15,6 +15,125 @@ const WIKIDATA_ENDPOINT = 'https://query.wikidata.org/sparql'
 const ABGEORDNETENWATCH_API = 'https://www.abgeordnetenwatch.de/api/v2'
 const ABGEORDNETENWATCH_RANGE_END = 1000
 
+const youthOrganizationSources = [
+  {
+    id: 'jusos',
+    organization: 'Jusos',
+    partyId: 'SPD',
+    partyRaw: 'SPD',
+    wikidataId: 'Q690370',
+    partyWikidataIds: ['Q49768'],
+    url: 'https://jusos.de/wer-wir-sind/bundesvorstand/',
+    currentBoardNames: [
+      'Philipp Türmer',
+      'Marco Albers',
+      'Johanna Börgermann',
+      'Matthias Bock',
+      'Steven Commey-Bortsie',
+      'Kirsti Elle',
+      'Mareike Engel',
+      'Antonia Miersch',
+      'Johanna Seidel',
+      'Laura Wanninger',
+      'Gidion Zieten',
+      'Paula Schmedding',
+      'Rachid Khenissi',
+      'Azra Preisler',
+      'Tim Siebeneicher',
+      'Yagmur Topçu',
+      'Yağmur Topçu',
+      'Lucy Eggert',
+      'Anna Kasparyan',
+    ],
+  },
+  {
+    id: 'julis',
+    organization: 'Junge Liberale',
+    partyId: 'FDP',
+    partyRaw: 'FDP',
+    wikidataId: 'Q449361',
+    partyWikidataIds: ['Q13124'],
+    url: 'https://www.fdp.de/bundeskonferenz-der-julis-von-abschied-zu-aufbruch',
+    currentBoardNames: [
+      'Finn Flebbe',
+      'Franziska Brandmann',
+      'Pascal Schejnoha',
+      'Julia Hehl',
+      'Jelger Tosch',
+      'Laurent Putzier',
+    ],
+  },
+  {
+    id: 'junge-union',
+    organization: 'Junge Union',
+    partyId: 'CDU/CSU',
+    partyRaw: 'CDU/CSU',
+    wikidataId: 'Q497594',
+    partyWikidataIds: ['Q49762', 'Q49763'],
+    url: 'https://www.junge-union.de/ueber-uns/bundesvorstand/',
+    currentBoardNames: [
+      'Johannes Winkel',
+      'Nicola Gehringer',
+      'Franziska Lammert',
+      'Pascal Reddig',
+      'Ann-Cathrin Simon',
+      'Clara von Nathusius',
+      'Annamarie Bauer',
+      'Sarah Beckhoff',
+      'Fabian Beine',
+      'Stefanie Franzl',
+      'Philipp Geib',
+      'Cornelius Golembiewski',
+      'Martin Hauner',
+      'Julian Herrmann',
+      'André Hess',
+      'Marc-Philipp Janson',
+      'Simon Mai',
+      'Ludwig Schnur',
+      'Marcel Tillmann',
+      'Moritz Übermuth',
+      'Finn Wandhoff',
+      'Charlotte Warken-Luxenburger',
+    ],
+  },
+  {
+    id: 'gruene-jugend',
+    organization: 'Grüne Jugend',
+    partyId: 'GRUENE',
+    partyRaw: 'Bündnis 90/Die Grünen',
+    wikidataId: 'Q255509',
+    partyWikidataIds: ['Q49766'],
+    url: 'https://gruene-jugend.de/bundesvorstand/',
+    currentBoardNames: [
+      'Henriette Held',
+      'Luis Bobga',
+      'Annika Randzio',
+      'Jonathan Morsch',
+      'Katharina Müller',
+      'Stina Reichardt',
+      'Laetitia Wendt',
+      'Moritz Frings',
+      'Tammo Westphal',
+      'Melsa Yildirim',
+    ],
+  },
+  {
+    id: 'linksjugend-solid',
+    organization: "Linksjugend ['solid]",
+    partyId: 'LINKE',
+    partyRaw: 'Die Linke',
+    wikidataId: 'Q11514',
+    partyWikidataIds: ['Q49764'],
+    url: 'https://www.linksjugend-solid.de/verband/bundessprecherinnenrat/',
+    currentBoardNames: [
+      'Maria Lara Moubarak',
+      'Selina Pfister',
+      'Yannic Schalk',
+      'Limes Schäfer',
+    ],
+  },
+]
+
 const partyMeta = {
   KPD: {
     label: 'KPD',
@@ -637,6 +756,102 @@ function mapAbgeordnetenwatchMandatesToEntries(mandates, portraits, existingEntr
   return dedupeEntries(entries)
 }
 
+async function fetchYouthOrganizationCandidates() {
+  const candidates = []
+
+  for (const source of youthOrganizationSources) {
+    const boardPortraits = await fetchWikidataPortraitsForNames(source.currentBoardNames)
+    for (const name of source.currentBoardNames) {
+      const portrait = boardPortraits.get(normalizeName(name))
+      if (!portrait) continue
+      candidates.push({
+        source,
+        name,
+        portrait,
+      })
+    }
+
+    const wikidataRows = await fetchWikidataYouthOrganizationMembers(source)
+    candidates.push(...wikidataRows)
+  }
+
+  return candidates
+}
+
+async function fetchWikidataYouthOrganizationMembers(source) {
+  const parties = source.partyWikidataIds.map((id) => `wd:${id}`).join(' ')
+  const query = `
+SELECT DISTINCT ?person ?personLabel ?image WHERE {
+  VALUES ?party { ${parties} }
+  ?person wdt:P463 wd:${source.wikidataId};
+          wdt:P102 ?party;
+          wdt:P31 wd:Q5;
+          wdt:P18 ?image.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "de,en". }
+}
+LIMIT 180
+`
+  const url = `${WIKIDATA_ENDPOINT}?format=json&query=${encodeURIComponent(query)}`
+  const json = await fetchWikidataJson(url, `${source.organization} Wikidata members`)
+  if (!json) return []
+
+  return (json.results?.bindings ?? [])
+    .map((item) => {
+      const name = cleanText(item.personLabel?.value)
+      const imageUrl = buildCommonsThumbnailUrl(cleanText(item.image?.value))
+      const personUrl = cleanText(item.person?.value)
+      if (!name || !imageUrl) return null
+
+      return {
+        source,
+        name,
+        portrait: {
+          imageUrl,
+          imageSourceUrl: personUrl,
+          imageAttribution: 'Wikimedia Commons / Wikidata',
+          imageLicense: 'See linked Wikimedia file metadata',
+        },
+      }
+    })
+    .filter(Boolean)
+}
+
+function mapYouthOrganizationCandidatesToEntries(candidates, existingEntries) {
+  const existingNames = new Set(existingEntries.map((entry) => normalizeName(entry.name)))
+  const entries = []
+
+  for (const candidate of candidates) {
+    const name = cleanText(candidate.name)
+    const normalized = normalizeName(name)
+    const partyId = candidate.source.partyId
+    if (!name || !normalized || !partyMeta[partyId] || existingNames.has(normalized)) continue
+
+    existingNames.add(normalized)
+    entries.push({
+      id: `youth-${candidate.source.id}-${slugifyId(name)}`,
+      name,
+      partyId,
+      partyRaw: candidate.source.partyRaw,
+      imageUrl: candidate.portrait.imageUrl,
+      imageSourceUrl: candidate.portrait.imageSourceUrl,
+      imageAttribution: candidate.portrait.imageAttribution,
+      imageLicense: candidate.portrait.imageLicense,
+      birthYear: undefined,
+      deathYear: undefined,
+      terms: [],
+      mandateLabel: candidate.source.organization,
+      dataAttribution: 'Jugendorganisationen / Wikidata',
+      dataSourceUrl: candidate.source.url,
+    })
+  }
+
+  return dedupeEntries(entries)
+}
+
+function slugifyId(value) {
+  return normalizeName(value).replace(/\s+/g, '-')
+}
+
 function getMandatePartyLabel(mandate) {
   const currentFraction =
     mandate.fraction_membership?.find((membership) => !membership.valid_until) ??
@@ -682,14 +897,24 @@ async function main() {
     awPortraits,
     bundestagEntries,
   )
+  const youthCandidates = await fetchYouthOrganizationCandidates()
+  const youthEntries = mapYouthOrganizationCandidatesToEntries(youthCandidates, [
+    ...bundestagEntries,
+    ...awEntries,
+  ])
 
-  const entries = dedupeEntries([...bundestagEntries, ...awEntries])
+  const entries = dedupeEntries([...bundestagEntries, ...awEntries, ...youthEntries])
     .sort((a, b) => a.name.localeCompare(b.name, 'de'))
 
   const data = {
     generatedAt: new Date().toISOString(),
     sources: {
-      dataProviders: ['Deutscher Bundestag', 'abgeordnetenwatch', 'Wikidata/Wikimedia'],
+      dataProviders: [
+        'Deutscher Bundestag',
+        'abgeordnetenwatch',
+        'Jugendorganisationen',
+        'Wikidata/Wikimedia',
+      ],
       bundestagStammdatenUrl: BUNDESTAG_XML_ZIP,
       bundestagSnapshot: snapshot,
       currentPortraitEndpoint: BUNDESTAG_PORTRAIT_ENDPOINT,
@@ -697,8 +922,15 @@ async function main() {
       abgeordnetenwatchCurrentParliaments: awSource.parliamentCount,
       abgeordnetenwatchMandatesScanned: awSource.mandates.length,
       abgeordnetenwatchEntriesAdded: awEntries.length,
+      youthOrganizations: youthOrganizationSources.map((source) => ({
+        label: source.organization,
+        url: source.url,
+      })),
+      youthOrganizationCandidatesScanned: youthCandidates.length,
+      youthOrganizationEntriesAdded: youthEntries.length,
       imageFallback: 'Bundestag portraits first; Wikidata/Wikimedia when matched by name',
-      skippedEntries: members.length + awSource.mandates.length - entries.length,
+      skippedEntries:
+        members.length + awSource.mandates.length + youthCandidates.length - entries.length,
     },
     parties: buildPartyList(entries),
     entries,
@@ -712,7 +944,7 @@ async function main() {
   )
 
   console.log(
-    `Wrote ${entries.length} entries across ${data.parties.length} parties (${bundestagEntries.length} Bundestag, ${awEntries.length} abgeordnetenwatch additions).`,
+    `Wrote ${entries.length} entries across ${data.parties.length} parties (${bundestagEntries.length} Bundestag, ${awEntries.length} abgeordnetenwatch additions, ${youthEntries.length} youth organization additions).`,
   )
 }
 

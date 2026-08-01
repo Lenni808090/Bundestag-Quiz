@@ -5,9 +5,11 @@ import {
   PLAYER_NAME_MAX_LENGTH,
   addLeaderboardEntry,
   loadLeaderboard,
+  loadPlayerName,
   normalizePlayerName,
   rankLeaderboard,
   saveLeaderboard,
+  savePlayerName,
 } from './leaderboard.js'
 
 function createStorage() {
@@ -51,5 +53,13 @@ describe('leaderboard', () => {
     saveLeaderboard(entries, storage)
     assert.equal(loadLeaderboard(storage)[0].name, 'Leona')
     assert.equal(loadLeaderboard(storage)[0].score, 7)
+  })
+
+  it('saves and loads the last player name from storage', () => {
+    const storage = createStorage()
+
+    savePlayerName('  Sehr   Langer Spielername  ', storage)
+
+    assert.equal(loadPlayerName(storage), 'Sehr Langer Sp')
   })
 })

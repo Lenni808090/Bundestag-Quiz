@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import politiciansData from './data/politicians.json'
+import { specialEntries } from './data/specialEntries'
 import {
   buildPartyTargets,
   getAccuracy,
@@ -11,12 +12,17 @@ import {
   PLAYER_NAME_MAX_LENGTH,
   addLeaderboardEntry,
   loadLeaderboard,
+  loadPlayerName,
+  normalizePlayerName,
   saveLeaderboard,
+  savePlayerName,
 } from './lib/leaderboard'
 import './App.css'
 
+const quizEntries = [...politiciansData.entries, ...specialEntries]
+
 function createRound(usedIds = []) {
-  const entry = pickEntry(politiciansData.entries, usedIds)
+  const entry = pickEntry(quizEntries, usedIds)
   return {
     entry,
     targets: buildPartyTargets(
@@ -24,13 +30,13 @@ function createRound(usedIds = []) {
       politiciansData.parties,
       undefined,
       Math.random,
-      politiciansData.entries,
+      quizEntries,
     ),
   }
 }
 
 function getNextUsedIds(usedIds, entryId) {
-  return usedIds.length + 1 >= politiciansData.entries.length ? [] : [...usedIds, entryId]
+  return usedIds.length + 1 >= quizEntries.length ? [] : [...usedIds, entryId]
 }
 
 const initialScore = { correct: 0, total: 0, streak: 0 }
@@ -56,7 +62,7 @@ function App() {
   const [score, setScore] = useState(initialScore)
   const [leaderboard, setLeaderboard] = useState(() => loadLeaderboard())
   const [leaderboardState, setLeaderboardState] = useState('loading')
-  const [playerName, setPlayerName] = useState('')
+  const [playerName, setPlayerName] = useState(() => loadPlayerName())
   const [scoreSaved, setScoreSaved] = useState(false)
   const [isSavingScore, setIsSavingScore] = useState(false)
   const [usedIds, setUsedIds] = useState([])
@@ -112,7 +118,7 @@ function App() {
     setRound(nextRoundState)
     setResult(null)
     setLoadedImageUrl(null)
-    setPlayerName('')
+    setPlayerName(loadPlayerName())
     setScoreSaved(false)
     setIsSavingScore(false)
   }, [])
@@ -139,7 +145,7 @@ function App() {
     setScreen('menu')
     setMode(null)
     setResult(null)
-    setPlayerName('')
+    setPlayerName(loadPlayerName())
     setScoreSaved(false)
     setIsSavingScore(false)
   }
@@ -161,15 +167,16 @@ function App() {
   async function handleSaveScore(event) {
     event.preventDefault()
     if (!knockoutEnded || scoreSaved || isSavingScore) return
+    const normalizedName = normalizePlayerName(playerName)
 
     const fallbackEntries = addLeaderboardEntry(leaderboard, {
-      name: playerName,
+      name: normalizedName,
       score: score.correct,
     })
 
     setIsSavingScore(true)
     try {
-      const entries = await saveGlobalLeaderboardEntry(playerName, score.correct)
+      const entries = await saveGlobalLeaderboardEntry(normalizedName, score.correct)
       setLeaderboard(entries)
       saveLeaderboard(entries)
       setLeaderboardState('global')
@@ -178,6 +185,8 @@ function App() {
       saveLeaderboard(fallbackEntries)
       setLeaderboardState('local')
     } finally {
+      savePlayerName(normalizedName)
+      setPlayerName(normalizedName)
       setScoreSaved(true)
       setIsSavingScore(false)
     }
@@ -253,26 +262,43 @@ function App() {
 
   return (
     <main className="app-shell">
+      {round.entry.isSpecialRare && (
+        <div className="special-confetti" aria-hidden="true">
+          {Array.from({ length: 140 }, (_, index) => (
+            <span
+              key={index}
+              style={{
+                '--confetti-x': `${(index * 29) % 100}%`,
+                '--confetti-delay': `${(index % 28) * 0.035}s`,
+                '--confetti-drift': `${(index % 13) - 6}rem`,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
       <header className="topbar">
         <div>
           <p className="eyebrow">{activeMode?.label ?? 'Spiel'}</p>
           <h1>Bundestag-Parteien-Quiz</h1>
         </div>
-        <dl className="scoreboard" aria-label="Spielstand">
+        <dl className={`scoreboard ${isKnockout ? 'is-knockout' : ''}`} aria-label="Spielstand">
           <div>
             <dt>{isKnockout ? 'Punkte' : 'Richtig'}</dt>
-            <dd>
-              {score.correct}/{score.total}
-            </dd>
+            <dd>{isKnockout ? score.correct : `${score.correct}/${score.total}`}</dd>
           </div>
-          <div>
-            <dt>Serie</dt>
-            <dd>{score.streak}</dd>
-          </div>
-          <div>
-            <dt>Quote</dt>
-            <dd>{getAccuracy(score)}%</dd>
-          </div>
+          {!isKnockout && (
+            <>
+              <div>
+                <dt>Serie</dt>
+                <dd>{score.streak}</dd>
+              </div>
+              <div>
+                <dt>Quote</dt>
+                <dd>{getAccuracy(score)}%</dd>
+              </div>
+            </>
+          )}
         </dl>
         {!isKnockout && (
           <button type="button" className="secondary-action topbar-action" onClick={returnToMenu}>
@@ -283,6 +309,12 @@ function App() {
 
       <section className="game-board" aria-live="polite">
         <div className="portrait-area">
+          {round.entry.isSpecialRare && (
+            <div className="special-rare-alert" role="status">
+              <strong>Crazy Special Rare gefunden</strong>
+            </div>
+          )}
+
           <div className={`portrait-card ${imageLoading ? 'is-loading' : ''}`}>
             <img
               key={round.entry.id}
@@ -296,7 +328,7 @@ function App() {
             <div className="portrait-caption">
               <strong>{round.entry.name}</strong>
               <span>
-                {round.entry.birthYear ? `geb. ${round.entry.birthYear}` : 'MdB'}
+                {round.entry.birthYear ? `geb. ${round.entry.birthYear}` : 'Politische Person'}
                 {round.entry.terms.length > 0 ? `, WP ${round.entry.terms.join(', ')}` : ''}
               </span>
             </div>
