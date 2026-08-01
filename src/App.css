@@ -465,8 +465,8 @@ h1 {
 
   .plenary-area {
     min-height: 0;
-    border-radius: 18px 18px 4px 4px;
-    padding: 12px 12px 92px;
+    border-radius: 4px;
+    padding: 12px;
   }
 
   .plenary-area::before,
@@ -474,12 +474,9 @@ h1 {
     display: none;
   }
 
-  .presidium {
-    bottom: 16px;
-  }
-
+  .presidium,
   .lectern {
-    bottom: 58px;
+    display: none;
   }
 
   .party-hemicycle {

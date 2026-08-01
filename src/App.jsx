@@ -243,9 +243,7 @@ function App() {
                     wasChosen ? 'was-chosen' : ''
                   } ${isCorrect ? 'is-answer' : ''}`}
                   style={{ '--party-color': party.color }}
-                  onClick={() => {
-                    if (selected) submitAnswer(party.id)
-                  }}
+                  onClick={() => submitAnswer(party.id)}
                   onKeyDown={(event) => handlePartyKeyDown(event, party.id)}
                   disabled={answered}
                 >
