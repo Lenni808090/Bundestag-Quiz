@@ -38,6 +38,23 @@ describe('gameLogic', () => {
     assert.equal(entry.id, '1')
   })
 
+  it('caps large party pools when picking a round', () => {
+    const skewedEntries = [
+      { id: 'cdu-1', partyId: 'CDU/CSU', birthYear: 1980, terms: [21] },
+      { id: 'cdu-2', partyId: 'CDU/CSU', birthYear: 1980, terms: [21] },
+      { id: 'cdu-3', partyId: 'CDU/CSU', birthYear: 1980, terms: [21] },
+      { id: 'cdu-4', partyId: 'CDU/CSU', birthYear: 1980, terms: [21] },
+      { id: 'spd-1', partyId: 'SPD', birthYear: 1980, terms: [21] },
+    ]
+
+    const entry = pickEntry(skewedEntries, [], () => 0.7, {
+      historicalChance: 0,
+      partySampleCap: 2,
+    })
+
+    assert.equal(entry.partyId, 'SPD')
+  })
+
   it('builds party targets with the correct answer and no duplicates', () => {
     const targets = buildPartyTargets(entries[0], parties, 3, () => 0.3, entries)
     assert.equal(targets.length, 3)

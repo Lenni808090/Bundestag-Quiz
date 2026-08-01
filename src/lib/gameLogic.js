@@ -1,11 +1,15 @@
 export const ROUND_TARGET_COUNT = 6
 const DEFAULT_HISTORICAL_CHANCE = 0.7
+const DEFAULT_PARTY_SAMPLE_CAP = 120
 
 export function pickEntry(
   entries,
   usedIds = [],
   random = Math.random,
-  { historicalChance = DEFAULT_HISTORICAL_CHANCE } = {},
+  {
+    historicalChance = DEFAULT_HISTORICAL_CHANCE,
+    partySampleCap = DEFAULT_PARTY_SAMPLE_CAP,
+  } = {},
 ) {
   const used = new Set(usedIds)
   const remaining = entries.filter((entry) => !used.has(entry.id))
@@ -13,7 +17,7 @@ export function pickEntry(
   const historicalPool = basePool.filter(isHistoricalEntry)
   const pool =
     historicalPool.length > 0 && random() < historicalChance ? historicalPool : basePool
-  return pool[Math.floor(random() * pool.length)]
+  return pickFromCappedPartyPool(pool, random, partySampleCap)
 }
 
 export function buildPartyTargets(
@@ -85,6 +89,37 @@ function getEraPartyIds(entry, allEntries) {
 function getFirstTerm(entry) {
   const terms = entry.terms?.filter(Number.isFinite) ?? []
   return terms.length ? Math.min(...terms) : Infinity
+}
+
+function pickFromCappedPartyPool(entries, random, partySampleCap) {
+  if (!entries.length) return undefined
+  if (!Number.isFinite(partySampleCap) || partySampleCap <= 0) {
+    return entries[Math.floor(random() * entries.length)]
+  }
+
+  const groups = new Map()
+  for (const entry of entries) {
+    const group = groups.get(entry.partyId) ?? []
+    group.push(entry)
+    groups.set(entry.partyId, group)
+  }
+
+  const weightedGroups = [...groups.values()].map((group) => ({
+    entries: group,
+    weight: Math.min(group.length, partySampleCap),
+  }))
+  const totalWeight = weightedGroups.reduce((sum, group) => sum + group.weight, 0)
+  let threshold = random() * totalWeight
+
+  for (const group of weightedGroups) {
+    threshold -= group.weight
+    if (threshold <= 0) {
+      return group.entries[Math.floor(random() * group.entries.length)]
+    }
+  }
+
+  const lastGroup = weightedGroups.at(-1).entries
+  return lastGroup[Math.floor(random() * lastGroup.length)]
 }
 
 function shuffle(items, random) {
