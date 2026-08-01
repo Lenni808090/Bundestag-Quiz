@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import politiciansData from './data/politicians.json'
 import {
   buildPartyTargets,
@@ -23,10 +23,20 @@ function createRound(usedIds = []) {
   }
 }
 
+function getNextUsedIds(usedIds, entryId) {
+  return usedIds.length + 1 >= politiciansData.entries.length ? [] : [...usedIds, entryId]
+}
+
 const initialScore = { correct: 0, total: 0, streak: 0 }
+const gameModes = [
+  { id: 'endless', label: 'Endlos' },
+  { id: 'knockout', label: 'K.o.-Serie' },
+]
 
 function App() {
+  const [mode, setMode] = useState('endless')
   const [score, setScore] = useState(initialScore)
+  const [bestKnockoutScore, setBestKnockoutScore] = useState(0)
   const [usedIds, setUsedIds] = useState([])
   const [round, setRound] = useState(() => createRound())
   const [result, setResult] = useState(null)
@@ -42,11 +52,33 @@ function App() {
   )
 
   const answered = Boolean(result)
+  const isKnockout = mode === 'knockout'
+  const knockoutEnded = isKnockout && result && !result.correct
   const imageLoading = loadedImageUrl !== round.entry.imageUrl
   const chamberTargets = useMemo(
     () => [...round.targets].sort((a, b) => (a.seatOrder ?? 70) - (b.seatOrder ?? 70)),
     [round.targets],
   )
+
+  const nextRound = useCallback(() => {
+    const nextUsedIds = getNextUsedIds(usedIds, round.entry.id)
+    setUsedIds(nextUsedIds)
+    setRound(createRound(nextUsedIds))
+    setResult(null)
+    setSelected(false)
+    setDrag(null)
+    portraitRef.current?.focus()
+  }, [round.entry.id, usedIds])
+
+  useEffect(() => {
+    if (!isKnockout || !result?.correct) return undefined
+
+    const timeoutId = window.setTimeout(() => {
+      nextRound()
+    }, 700)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [isKnockout, nextRound, result?.correct])
 
   function registerTarget(id, node) {
     if (node) {
@@ -74,7 +106,13 @@ function App() {
   function submitAnswer(partyId) {
     if (answered || !partyId) return
     const correct = isCorrectDrop(round.entry, partyId)
-    setScore((currentScore) => updateScore(currentScore, correct))
+    setScore((currentScore) => {
+      const nextScore = updateScore(currentScore, correct)
+      if (mode === 'knockout') {
+        setBestKnockoutScore((bestScore) => Math.max(bestScore, nextScore.correct))
+      }
+      return nextScore
+    })
     setResult({
       partyId,
       correct,
@@ -82,22 +120,22 @@ function App() {
     setSelected(false)
   }
 
-  function nextRound() {
-    const nextUsedIds =
-      usedIds.length + 1 >= politiciansData.entries.length ? [] : [...usedIds, round.entry.id]
-    setUsedIds(nextUsedIds)
-    setRound(createRound(nextUsedIds))
-    setResult(null)
-    setSelected(false)
-    setDrag(null)
-    portraitRef.current?.focus()
-  }
-
   function resetGame() {
     const nextRoundState = createRound()
     setScore(initialScore)
     setUsedIds([])
     setRound(nextRoundState)
+    setResult(null)
+    setSelected(false)
+    setDrag(null)
+  }
+
+  function changeMode(nextMode) {
+    if (nextMode === mode) return
+    setMode(nextMode)
+    setScore(initialScore)
+    setUsedIds([])
+    setRound(createRound())
     setResult(null)
     setSelected(false)
     setDrag(null)
@@ -157,16 +195,28 @@ function App() {
           <p className="eyebrow">Bundestag seit 1949</p>
           <h1>Bundestag-Parteien-Quiz</h1>
         </div>
+        <div className="mode-switch" role="group" aria-label="Spielmodus">
+          {gameModes.map((gameMode) => (
+            <button
+              key={gameMode.id}
+              type="button"
+              className={mode === gameMode.id ? 'is-active' : ''}
+              onClick={() => changeMode(gameMode.id)}
+            >
+              {gameMode.label}
+            </button>
+          ))}
+        </div>
         <dl className="scoreboard" aria-label="Spielstand">
           <div>
-            <dt>Richtig</dt>
+            <dt>{isKnockout ? 'Punkte' : 'Richtig'}</dt>
             <dd>
               {score.correct}/{score.total}
             </dd>
           </div>
           <div>
-            <dt>Serie</dt>
-            <dd>{score.streak}</dd>
+            <dt>{isKnockout ? 'Bestwert' : 'Serie'}</dt>
+            <dd>{isKnockout ? bestKnockoutScore : score.streak}</dd>
           </div>
           <div>
             <dt>Quote</dt>
@@ -213,7 +263,15 @@ function App() {
 
           {result && (
             <div className={`feedback ${result.correct ? 'is-correct' : 'is-wrong'}`}>
-              <strong>{result.correct ? 'Richtig.' : 'Nicht ganz.'}</strong>
+              <strong>
+                {result.correct
+                  ? isKnockout
+                    ? 'Richtig. Weiter gehts.'
+                    : 'Richtig.'
+                  : knockoutEnded
+                    ? `Ende. ${score.correct} Punkte.`
+                    : 'Nicht ganz.'}
+              </strong>
               <span>
                 {round.entry.name} gehört zu {correctParty?.label ?? round.entry.partyRaw}
                 {correctParty?.fullName ? ` (${correctParty.fullName})` : ''}.
@@ -271,8 +329,13 @@ function App() {
           <button type="button" className="secondary-action" onClick={resetGame}>
             Neu starten
           </button>
-          <button type="button" className="primary-action" onClick={nextRound}>
-            Nächste Runde
+          <button
+            type="button"
+            className="primary-action"
+            onClick={knockoutEnded ? resetGame : nextRound}
+            disabled={isKnockout && !knockoutEnded}
+          >
+            {knockoutEnded ? 'Neue K.o.-Serie' : 'Nächste Runde'}
           </button>
         </div>
       </footer>
